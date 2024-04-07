@@ -1,26 +1,60 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <h1 class="wetholds-title">Wetholds</h1>
+    <div>
+        <DaySelectorComponent :days="days" @update:day="updateDay"/>
+        <CragsListComponent :crags="crags" :selectedDay="selectedDay" />
+    </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import 'weather-icons/css/weather-icons.min.css';
+import DaySelectorComponent from './components/DaySelectorComponent.vue';
+import CragsListComponent from './components/CragsListComponent.vue';
 
 export default {
-  name: 'App',
   components: {
-    HelloWorld
+    CragsListComponent,
+    DaySelectorComponent
+  },
+  data() {
+    const currentDate = new Date()
+    const currentDay = currentDate.toISOString().split('T')[0]
+
+    return {
+      crags: [],
+      days: [],
+      selectedDay: currentDay
+    }
+  },
+  mounted() {
+    this.fetchCrags();
+  },
+  methods: {
+    fetchCrags() {
+      fetch('http://localhost:9990/crags')
+        .then(response => response.json())
+        .then(data => {
+          this.crags = data.crags
+          this.days = Object.keys(data.crags[0].weather.temperature)
+        })
+        .catch(error => console.error('Error fetching crags:', error))
+    },
+    updateDay(day) {
+      this.selectedDay = day
+    }
   }
-}
+};
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: white;
 }
+
+.wetholds-title {
+  text-align: center;
+}
+
 </style>
