@@ -1,7 +1,7 @@
 <template>
     <div class="day-selector">
         <button @click="decrementDay">←</button>
-        <span>Day: {{ days[currentDayIndex] }}</span>
+        <span class="day-selector-day">{{ days[currentDayIndex] }} ({{ printWeekDay(days[currentDayIndex]) }})</span>
         <button @click="incrementDay">→</button>
     </div>
 </template>
@@ -36,6 +36,12 @@ export default {
       this.currentDayIndex--
       this.day = this.days[this.currentDayIndex]
       this.$emit('update:day', this.day);
+    },
+    printWeekDay(dateString) {
+      const date = new Date(dateString)
+      const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+
+      return weekdays[date.getDay()]
     }
   }
 }
@@ -47,6 +53,11 @@ export default {
     align-items: center;
     justify-content: center;
     margin-bottom: 20px;
+}
+
+.day-selector-day {
+  min-width: 220px;
+  text-align: center;
 }
 
 .day-selector button {

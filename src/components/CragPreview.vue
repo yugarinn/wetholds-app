@@ -1,6 +1,5 @@
 <template>
-  <div class="crags-list">
-      <li class="crag-list-item">
+      <li class="crag-list-item" @click="openCragDetail">
           <div class="crag-name">
               {{ crag.name }}
           </div>
@@ -23,15 +22,19 @@
               </div>
           </div>
       </li>
-  </div>
 </template>
 
 <script>
 export default {
   name: 'CragsList',
+  data() {
+    return {
+      selectedCrag: null
+    }
+  },
   props: {
     crag: {
-      type: Array,
+      type: Object,
       required: true,
     },
     selectedDay: {
@@ -47,25 +50,29 @@ export default {
       return Math.min.apply(Math, this.crag.weather.temperature[this.selectedDay])
     },
     getPrecipitationProbability() {
-      return this.crag.weather.precipitationProbability[this.selectedDay][0]
+      return this.getMeanValueOf('precipitationProbability')
     },
     getWindSpeed() {
-      return this.crag.weather.windSpeed[this.selectedDay][0]
+      return this.getMeanValueOf('windSpeed')
     },
     getCloudCover() {
-      return this.crag.weather.cloudCover[this.selectedDay][0]
+      return this.getMeanValueOf('cloudCover')
+    },
+    getMeanValueOf(weatherProperty) {
+      const values = this.crag.weather[weatherProperty][this.selectedDay].slice(7)
+
+      return parseInt(values.reduce((carry, value) => carry + value, 0) / values.length)
+    },
+    openCragDetail() {
+      this.$emit('openCragDetail', this.crag);
     }
   }
 };
 </script>
 
 <style>
-.crags-list {
-  list-style: none;
-  padding: 0;
-}
-
 .crag-list-item {
+  width: 400px;
   font-size: 16px;
   background-color: #F9FAFB;
   border: 1px solid #E5E7EB;
@@ -98,7 +105,6 @@ export default {
 .crag-precipitation-probability {
   display: flex;
   align-items: center;
-  font-size: 14px;
 }
 
 .wi {
