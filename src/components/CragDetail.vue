@@ -17,9 +17,10 @@
                     <p>{{ getFormattedHour(hour) }}</p>
                 </div>
                 <div class="temperature">
-                    <p :style="getTemperatureStyle(getWeatherValueForHour('temperature', hour))">
-                        {{ getWeatherValueForHour('temperature', hour) }}°
-                    </p>
+                    <div :style="getTemperatureStyle(getWeatherValueForHour('temperature', hour))" class="temperature-value">
+                        <i class="wi wi-cloudy"></i>
+                        <p>{{ getWeatherValueForHour('temperature', hour) }}°</p>
+                    </div>
                 </div>
                 <div class="precipitation">
                     <p>{{ getWeatherValueForHour('precipitationProbability', hour) }}%</p>
@@ -62,13 +63,14 @@ export default {
       const position = ((temperature - minTemperature.value) / (maxTemperature.value - minTemperature.value)) * 100
 
       return {
-        top: `${100 - position}%`
-      }
+          top: `${100 - position}%`
+        }
     }
 
     function getFormattedHour(hour) {
       const formattedHour = new Date().setHours(hour, 0, 0, 0)
-      return new Date(formattedHour).toLocaleTimeString('it-IT', {
+
+      return new Date(formattedHour).toLocaleTimeString('es-ES', {
         hour: '2-digit',
         minute: '2-digit',
         hour12: false
@@ -102,13 +104,29 @@ export default {
     border-bottom: 1px solid #e6e4e1;
 }
 
-.temperature p {
-    position: absolute;
-}
-
 .temperature {
     position: relative;
     height: 100px;
+    margin: 40px 0px 60px 0px;
+}
+
+.temperature-value {
+    position: absolute;
+    left: 0;
+    right: 0;
+}
+
+.temperature-value p,
+.temperature-value i {
+    position: relative;
+}
+
+.temperature-value p {
+    margin-top: 2px;
+}
+
+.temperature .wi {
+    margin-left: 0px;
 }
 
 .crag-detail {
@@ -131,16 +149,6 @@ export default {
 }
 
 .temperature {
-    height: 100px;
-    margin: 40px 0px;
-}
-
-.temperature p {
-    position: absolute;
-    right: 0;
-    left: 0;
-    bottom: 0;
-    margin: 0;
 }
 
 @media (max-width: 768px) {
