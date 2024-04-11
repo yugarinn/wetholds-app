@@ -72,6 +72,7 @@ export default {
 
 <style>
 .crag-list-item {
+  cursor: pointer;
   width: 400px;
   font-size: 16px;
   background-color: #F9FAFB;
