@@ -11,7 +11,7 @@
             <p><a target="_blank" :href="'https://www.google.com/maps/place/' + getCragCoordinates()">directions</a></p>
         </div>
 
-        <div class="weather-grid">
+        <div class="weather-grid" ref="weatherGrid">
             <div class="weather-grid-hour" v-for="(n, hour) in 24" :key="hour">
                 <div class="time">
                     <p>{{ getFormattedHour(hour) }}</p>
@@ -52,6 +52,8 @@ export default {
       if (crag.value.weather && crag.value.weather.temperature && crag.value.weather.temperature[selectedDay.value]) {
         temperatures.value = Object.values(crag.value.weather.temperature[selectedDay.value])
       }
+
+      scrollToColumn(9)
     })
 
     const maxTemperature = computed(() => Math.max(...temperatures.value))
@@ -89,7 +91,21 @@ export default {
       return crag.value.lat + ',' + crag.value.lon
     }
 
-    return { getTemperatureStyle, getFormattedHour, getWeatherValueForHour, getCragDisciplines, getCragCoordinates }
+    function scrollToColumn(columnIndex) {
+      const weatherGrid = document.querySelector('.weather-grid')
+
+      if (weatherGrid) {
+        const gridItem = weatherGrid.querySelector('.weather-grid-hour')
+
+        if (gridItem) {
+          const gridItemWidth = gridItem.clientWidth - 10
+
+          weatherGrid.scrollLeft = gridItemWidth * (columnIndex - 1)
+        }
+      }
+    }
+
+    return { getTemperatureStyle, getFormattedHour, getWeatherValueForHour, getCragDisciplines, getCragCoordinates, scrollToColumn }
   },
   methods: {
     close() {

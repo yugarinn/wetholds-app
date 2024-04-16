@@ -4,6 +4,7 @@
             <CragPreview v-for="crag in crags" :crag="crag" :selectedDay="selectedDay" :key="crag.id" @openCragDetail="openCragDetail"/>
         </ul>
     </div>
+
     <CragDetail v-if="selectedCrag" :crag="selectedCrag" :selectedDay="selectedDay" @closeCragDetail="closeCragDetail"/>
 </template>
 
